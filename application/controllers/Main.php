@@ -96,15 +96,126 @@ class Main extends CI_Controller {
     }
 	//-------------------------------------------------------------------------------------------------------------------------------
     function new_users(){
-      //~~$this->tks_redirect();
+      //~~$this->pb_redirect();
       $data = "";
       //~~$data['print_department'] = $this->employee_model->get_dropdepartment();
 
              $this->load->view('templates/header');
-              $this->load->view('new_users',$data);
+              $this->load->view('exclusive/new_users',$data);
              $this->load->view('templates/footer');
              //$this->render('admin', $data);
     }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    public function insert_users(){
+      //~~$this->pb_redirect();
+            //$this->newcampaign();
+            //echo 'ok';
+           /*
+            $data['name'] = $this->input->post('name');
+            $data['datetime_init'] = $this->input->post('datetime_init');
+            $data['datetime_end'] = $this->input->post('datetime_end');
+            $data['daytime_init'] = $this->input->post('hora_ini_HH') . $this->input->post('hora_ini_MM');
+            $data['daytime_end'] = $this->input->post('hora_fin_HH') . $this->input->post('hora_fin_MM');
+           */
+        //prevent direct access when info aren't field
+        //echo 'proceed';exit;
+        $username = $this->input->post('username',1);
+        if (strlen($username)<1)
+            redirect("/main/load_registeredmembers");
+        //exit;
+            $data['username'] = $this->input->post('username');
+            $data['gender'] = $this->input->post('gender');
+            $data['password'] = $this->input->post('password');
+            $data['email'] = $this->input->post('email');
+
+            $this->users_model->insert_entry($data);
+            redirect("/main/load_registeredmembers");
+    }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    function edit_users(){
+        //~~$this->tks_redirect();
+        $id = $this->uri->segment(3);
+       /*
+        $leadid = $this->uri->segment(4);
+        $data['lead'] = $this->Leads_Model->get_leads_info($leadid);
+        $data['content'] = $this->load->view('admin/leads/profile', $data, TRUE);        
+        echo 'test '.$id;
+       /*/
+                    $data['entry'] =  $this->users_model->get_entry($id);
+                    //$_SESSION['agententry'] = $this->agent_model->$entry->id;;
+                    //echo $this->uri->segment(3, 0);
+                    //if(!isset($data['entry'][0]) || $data['entry'][0] == ""){
+                    if(!isset($data['entry'][0]) || $data['entry'][0] == ""){
+                            echo "No id found...redirecting";
+                            //echo $_SESSION['agententry'];
+                redirect("/main/load_registeredmembers");
+                    }
+                    else
+                    {
+                      //~~$data['print_department'] = $this->employee_model->get_dropdepartment();
+
+                            //!!$data['entry'] =  $this->employee_model->get_entry($this->input->post('id'));
+                            //$_SESSION['agententry'] = $gurl;
+                            //echo $_SESSION['agententry'];
+                            $data['entry'] = $data['entry'][0];
+
+                            //$_SESSION['agententry'] = $gurl;
+                            //echo $_SESSION['agententry'];
+                            $this->load->view('templates/header');
+                            $this->load->view('exclusive/edit_users', $data);
+                            $this->load->view('templates/footer');
+                    }
+
+    }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    function purge_users(){
+      //~~$this->tks_redirect();
+      if($this->uri->segment(3, 0) != ""){
+        $this->users_model->delete_entry($this->uri->segment(3, 0));  
+      }
+       //~~~$showmessage = "You have deleted an employee.<br />";
+       //$this->session->set_flashdata('tks_showmessage', $this->tks_message("Info!",$showmessage));
+       //~~~$this->tks_message("Info!",$showmessage);      
+       //$this->session->keep_flashdata('tks_showmessage');
+      redirect("/main/load_registeredmembers");
+      }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    public function update_users(){
+            //$this->newcampaign();
+            //echo 'ok';
+           /*
+            $data['name'] = $this->input->post('name');
+            $data['datetime_init'] = $this->input->post('datetime_init');
+            $data['datetime_end'] = $this->input->post('datetime_end');
+            $data['daytime_init'] = $this->input->post('hora_ini_HH') . $this->input->post('hora_ini_MM');
+            $data['daytime_end'] = $this->input->post('hora_fin_HH') . $this->input->post('hora_fin_MM');
+           */
+        //prevent direct access when info aren't field
+        //~~$this->tks_redirect();
+        //echo 'proceed';exit;
+        $id = $this->input->post('id',1);
+        $username = $this->input->post('username',1);
+        if (strlen($username)<1)
+            redirect("/main/load_registeredmembers/{$id}");
+        //exit;
+            $data['address1'] = $this->input->post('address1');
+            $data['dob'] = $this->input->post('birth_date');
+            $data['userphoto'] = $this->input->post('userphoto');
+            $data['activated'] = $this->input->post('activated');
+            $data['password'] = $this->input->post('password');
+            $data['lastname'] = $this->input->post('lastname');
+            $data['firstname'] = $this->input->post('firstname');
+            
+            $data['email'] = $this->input->post('email');
+            $data['gender'] = $this->input->post('gender');
+
+            $data['ipsignup'] = $this->input->post('ipsignup');
+            $data['password'] = $this->input->post('password');
+            $data['username'] = $this->input->post('username');
+
+            $this->users_model->update_entry($data);
+            redirect("/main/load_registeredmembers");
+    }    
 	//-------------------------------------------------------------------------------------------------------------------------------
     function pb_redirect(){  //redirect user to pages stricted for them
 			switch ($this->session->userdata('userrole')) 

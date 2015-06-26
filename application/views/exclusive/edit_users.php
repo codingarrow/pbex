@@ -5,12 +5,12 @@
         <!-- block -->
         <div class="block">
             <div class="navbar navbar-inner block-header">
-                <div class="muted pull-left">Add Users</div>
+                <div class="muted pull-left">Edit Users</div>
             </div>
             <div class="block-content collapse in">
                 <div class="span12">
                         <!-- BEGIN FORM  form_sample_1-->
-                        <form accept-charset="utf-8" class="form-horizontal" id="signupForm" method="post" action="<?php echo site_url()?>/main/insert_users/">
+                        <form accept-charset="utf-8" class="form-horizontal" id="signupForm" method="post" action="<?php echo site_url()?>/main/update_users/">
 
                           <fieldset>
                               <!--legend>Form Components</legend-->                            
@@ -23,9 +23,7 @@
                               Your form validation is successful!
                             </div>
 
-                              <input type="hidden" name="position" value="--" />
-                              <input type="hidden" name="id" value="<?php //echo $entry->id; ?>"/>
-
+                              <input type="hidden" name="id" value="<?php echo $entry->id; ?>"/>
 							  <?php
 							  /*
                               <div class="control-group">
@@ -49,22 +47,31 @@
                               </div>
 							  */
 							  ?>
-
                               <div class="control-group">
-                                  <label class="control-label">Gender</label>
-                                  <div class="controls">
-                                      <select id="gender" name="gender" class="span6 m-wrap">
-                                          <option value="M" <?php echo set_select('gender', 'M'); ?>>Male</option>
-                                          <option value="F" <?php echo set_select('gender', 'F'); ?>>Female</option>
-                                      </select>
-                                  </div>
+                                <label class="control-label">Activated</label>
+                                <div class="controls">
+                                             <select id="activated" name="activated" class="span6 m-wrap">
+                                              <option value="1" <?php if($entry->activated == "1") { echo "selected"; } ?>>Yes</option>
+                                              <option value="0" <?php if($entry->activated == "0") { echo "selected"; } ?>>No</option>
+                                            </select>
+                                </div>
+                              </div>
+							  
+                              <div class="control-group">
+                                <label class="control-label">Gender</label>
+                                <div class="controls">
+                                             <select id="gender" name="gender" class="span6 m-wrap">
+                                              <option value="M" <?php if($entry->gender == "M") { echo "selected"; } ?>>M</option>
+                                              <option value="F" <?php if($entry->gender == "F") { echo "selected"; } ?>>F</option>
+                                            </select>
+                                </div>
                               </div>
 
                               <?php //name changed to login changed to username?>
                               <div class="control-group">
                                 <label class="control-label">Username<span class="required">*</span></label>
                                 <div class="controls">
-                                  <input maxlength="32" type="text" name="username" id="username" data-required="1" class="span6 m-wrap"/>
+                                  <input value="<?php echo $entry->username; ?>" maxlength="32" type="text" name="username" id="username" data-required="1" class="span6 m-wrap"/>
                                 </div>
                               </div>
 
@@ -72,27 +79,66 @@
                               <div class="control-group">
                                   <label class="control-label">Password<span class="required">*</span></label>
                                   <div class="controls">
-                                      <input  maxlength="32" name="password" id="password" type="password" data-required="1" class="span6 m-wrap"/>
-                                      <span style="font-size: 9px"><?php //echo $entry->password; ?></span>
+                                      <input value="<?php echo $entry->password; ?>" maxlength="32" name="password" id="password" type="password" data-required="1" class="span6 m-wrap"/>
+                                      <span style="font-size: 9px"><?php echo $entry->password; ?></span>
                                   </div>
                               </div>
-
-                              <?php 
-							  /*
-                              <div class="control-group">
-                                <label class="control-label" for="birth_date">Birth Date</label>
-                                <div class="controls">
-                                  <input name="birth_date" type="text" class="input-xlarge datepicker" id="birth_date" />
-                                  <!--p class="help-block">In addition to freeform text, any HTML5 text-based input appears like so.</p-->
-                                </div>
-                              </div>    
-							  */
-							  ?>
 
                               <div class="control-group">
                                 <label class="control-label">Email<span class="required">*</span></label>
                                 <div class="controls">
-                                  <input maxlength="80" name="email" id="email" type="email" class="span6 m-wrap"/>
+                                  <input value="<?php echo $entry->email; ?>" maxlength="80" name="email" id="email" type="email" class="span6 m-wrap"/>
+                                </div>
+                              </div>
+							  
+                              <?php // ?>
+                              <div class="control-group">
+                                <label class="control-label">Lastname<span class="required">*</span></label>
+                                <div class="controls">
+                                  <input value="<?php echo $entry->lastname; ?>" maxlength="250" type="text" name="lastname" id="lastname" data-required="1" class="span6 m-wrap"/>
+                                </div>
+                              </div>
+
+
+                              <?php // ?>
+                              <div class="control-group">
+                                <label class="control-label">Firstname<span class="required">*</span></label>
+                                <div class="controls">
+                                  <input value="<?php echo $entry->firstname; ?>" maxlength="250" type="text" name="firstname" id="firstname" data-required="1" class="span6 m-wrap"/>
+                                </div>
+                              </div>
+
+
+                              <?php // ?>
+                              <div class="control-group">
+                                <label class="control-label">Middle<span class="required">*</span></label>
+                                <div class="controls">
+                                  <input value="<?php echo $entry->minit; ?>" maxlength="4" type="text" name="minit" id="minit" data-required="1" class="span6 m-wrap"/>
+                                </div>
+                              </div>
+
+                              <?php // ?>
+                              <div class="control-group">
+                                <label class="control-label" for="birth_date">Birth Date</label>
+                                <div class="controls">
+                                  <input name="birth_date" type="text" class="input-xlarge datepicker" id="birth_date" value="<?php echo $entry->dob; ?>">
+                                  <!--p class="help-block">In addition to freeform text, any HTML5 text-based input appears like so.</p-->
+                                </div>
+                              </div>    
+
+                              <?php // ?>
+                              <div class="control-group">
+                                <label class="control-label">Address<span class="required">*</span></label>
+                                <div class="controls">
+                                  <input value="<?php echo $entry->address1; ?>" maxlength="250" type="text" name="address1" id="address1" data-required="1" class="span6 m-wrap"/>
+                                </div>
+                              </div>
+
+                              <?php // ?>
+                              <div class="control-group">
+                                <label class="control-label">Userphoto<span class="required">*</span></label>
+                                <div class="controls">
+                                  <input value="<?php echo $entry->userphoto; ?>" maxlength="249" type="text" name="userphoto" id="userphoto" data-required="1" class="span6 m-wrap"/>
                                 </div>
                               </div>
 
@@ -149,10 +195,8 @@
                       </div>
                                    <!-- /validation -->
 
-
                               </div>
                           </div>                            
-
 	  <?php
 	  /*GUIDE DON'T PURGE
 <div class="samplebox">

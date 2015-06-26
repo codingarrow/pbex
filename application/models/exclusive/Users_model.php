@@ -1,25 +1,28 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
     //var $table_name = $this->config->item('tbl_timesheet');
 class Users_model extends CI_Model {
-    var $details;
+    //var $details;
   /*
     var $empid   = '';
     var $checkin = '';
     var $checkout = '';
     var $ipcheckin = '';
   */
+  
+    var $activated = '';
     var $address1 = '';
     var $dob = '';
-    var $email = '';
-    //var $deptparentid = '';
+    var $userphoto = '';
+
     var $firstname = '';
     var $lastname = '';
-    var $gender = '';
+    var $email = '';
+    //var $deptparentid = '';
     var $ipsignup = '';
     var $password = '';
     var $username = '';
-    var $userphoto = '';
-    var $userrole = '';
+    var $gender = '';
+	
     //var $table_name = $this->config->item('tbl_timesheet');
 
         //default 'A' in call_center.form comment out in the mean time
@@ -29,6 +32,7 @@ class Users_model extends CI_Model {
     {
         // Call the Model constructor
         parent::__construct();
+        //var $details;
     }
     //-------------------------------------------------------------------------------------------
     function validate_users( $email, $password ) {
@@ -258,17 +262,28 @@ class Users_model extends CI_Model {
                             'email'=>$this->input->post('email'));
         $this->db->insert('pb_users', $data);		
         */
+		$this->address1 = '';
+		$this->dob = '0000-00-00 00:00:00';
+		$this->userphoto = '';
+		$this->activated = 0;
+
+		$this->firstname = '';
+		$this->lastname = '';
+		
+        $this->username = $data['username'];
+        $this->email = $data['email'];
+        $this->ipsignup = $this->input->ip_address(); //$data['ipsignup'];
+        $this->password = $data['password'];
+        $this->gender= $data['gender'];
+
+		/* //these fields will appear on the edit form since we want less fields to insert intitially
+        $this->lastname = $data['lastname'];
+        $this->firstname = $data['firstname'];
         $this->address1 = $data['address1'];
         $this->dob = $data['dob'];
-        $this->firstname = $data['firstname'];
-        $this->lastname = $data['lastname'];
-        $this->gender= $data['gender'];
-        $this->email = $data['email'];
-        $this->ipsignup = $data['ipsignup'];
-        $this->password = $data['password'];
-        $this->username = $data['username'];
         $this->userphoto= $data['userphoto'];
         $this->userrole= $data['userrole'];
+		*/
 		
         $this->db->insert($this->config->item('pb_users'), $this);
         //$this->load->model('timesheet_model');
@@ -279,15 +294,15 @@ class Users_model extends CI_Model {
     {
         $this->address1 = $data['address1'];
         $this->dob = $data['dob'];
+        $this->userphoto= $data['userphoto'];
+        $this->activated = $data['activated'];
         $this->firstname = $data['firstname'];
         $this->lastname = $data['lastname'];
         $this->gender= $data['gender'];
         $this->email = $data['email'];
-        $this->ipsignup = $data['ipsignup'];
+        $this->ipsignup = $this->input->ip_address(); //$data['ipsignup'];
         $this->password = $data['password'];
         $this->username = $data['username'];
-        $this->userphoto= $data['userphoto'];
-        $this->userrole= $data['userrole'];
         //$this->password = hash('sha256', 'G0m1Pa$$'); //$data['password'];
         //$this->date    = time();
         //var_dump($data);exit;
@@ -308,15 +323,15 @@ class Users_model extends CI_Model {
         $data = array(
                        'address1' => $this->address1,
                        'dob' => $this->dob,
+                       'userphoto' => $this->userphoto,
+                       'activated' => $this->activated,
                        'firstname' => $this->firstname,
                        'lastname' => $this->lastname,
                        'gender' => $this->gender,
                        'email' => $this->email,
                        'ipsignup' => $this->ipsignup,
                        'password' => $this->password,
-                       'username' => $this->username,
-                       'userphoto' => $this->userphoto,
-                       'userrole' => $this->userrole
+                       'username' => $this->username
                     );
         $this->db->where('id', $this->input->post('id'));
         $this->db->update($this->config->item('pb_users'), $data);

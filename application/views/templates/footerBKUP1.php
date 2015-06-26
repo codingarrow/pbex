@@ -52,9 +52,8 @@
 		    /*  From this application/views/templates/footer.php file, SET of javascript (jQueries) are required to be preloaded per file for performance benefits.  For example
 				Only load the calendar(datepicker) related js if there's a date on the form, HENCE only load the javasript (jQueries) for those entry forms that really require them
 				2015 Jun 25 by ®yan™
-				new_employee     edit_employee
 			*/
-            $needle = "load_employeemasterlist"; $needle1 = "edit_users"; $needle3 = "new_users";$needle4 = "change_pwd"; $needle5 = "new_department"; $needle6 = "edit_department";
+            $needle = "load_employeemasterlist"; $needle1 = "edit_employee"; $needle3 = "new_employee";$needle4 = "change_pwd"; $needle5 = "new_department"; $needle6 = "edit_department";
             if ( (strpos($haystack, $needle) !== false) || (strpos($haystack, $needle1) !== false) || (strpos($haystack, $needle3) !== false) || (strpos($haystack, $needle4) !== false) || (strpos($haystack, $needle5) !== false) || (strpos($haystack, $needle6) !== false) )
             {
          ?>
@@ -81,8 +80,7 @@
         ?>          
 
          <?php
-		    //new_employee     edit_employee
-            $needle = "new_users"; $needle1 = "edit_users";  $needle3 = "change_pwd";
+            $needle = "new_employee"; $needle1 = "edit_employee";  $needle3 = "change_pwd";
             $haystack = current_url();
             //echo $haystack;
             if ( (strpos($haystack, $needle) !== false) || (strpos($haystack, $needle1) !== false) || (strpos($haystack, $needle3) !== false) )
@@ -96,10 +94,9 @@
             <!--this page  script only-->
             <script src="<?php echo $base_url;?>js/advanced-form-components.js"></script>
             <script type="text/javascript" src="<?php echo $base_url;?>js/jquery.validate.min.js"></script>
-			employee.js
           */
          ?>
-                <script src="<?php echo $base_url;?>js/form-validation-<?php echo $UPD?>users.js"></script>
+                <script src="<?php echo $base_url;?>js/form-validation-<?php echo $UPD?>employee.js"></script>
 
         <?php
           //used for forms so makes no sense to load them for pages with no forms
@@ -159,9 +156,9 @@
             */
           ?>
 
+
          <?php
-		    //edit_employee
-            $needle = "load_employeemasterlist"; $needle1 = "edit_users"; $needle3 = "new_employee";
+            $needle = "load_employeemasterlist"; $needle1 = "edit_employee"; $needle3 = "new_employee";
             if ( (strpos($haystack, $needle) !== false) || (strpos($haystack, $needle1) !== false)  || (strpos($haystack, $needle3) !== false) )
             {
          ?>
