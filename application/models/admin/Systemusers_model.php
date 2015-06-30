@@ -1,8 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
     //var $table_name = $this->config->item('tbl_timesheet');
 class Systemusers_model extends CI_Model {
-    var $details;
-  /*
+  /*var $details;
+	
     var $empid   = '';
     var $checkin = '';
     var $checkout = '';
@@ -81,6 +81,94 @@ class Systemusers_model extends CI_Model {
        
         $query = $this->db->get($this->config->item('pb_systemusers'));
         return $query->result();
+    }
+    //-------------------------------------------------------------------------------------------
+    public function users_count( ) 
+    {
+		/*
+		$sql = "SELECT date(checkin) as datefield
+				,concat(dayname(checkin),', ',monthname(checkin),' ',dayofmonth(checkin),', ',year(checkin)) AS tks_date
+				FROM timesheet Group By date(checkin)
+								order by date(checkin) DESC";
+			$query = $this->db->query($sql);
+		*/
+        $query = $this->db ->order_by('username', 'DESC')->get($this->config->item('pb_systemusers'));
+        //echo $query->num_rows();
+        return $query->num_rows();
+    }
+    //-------------------------------------------------------------------------------------------
+    function users_search($limit,$per_page)
+    {
+        $buildwhere = "";
+        //change this to the real table once debugging's ok
+        $pb_user = $this->config->item('pb_systemusers');
+        $buildwhere = " WHERE (1=0) ";
+		
+        //if strlen(this->qmp_searchbuildwhere())>2 { $buildwhere = this->qmp_searchbuildwhere();}
+        $lenwhere = strlen($this->pb_searchbuildwhere());
+        if ($lenwhere>2) { $buildwhere = " WHERE (1=1) " . $this->pb_searchbuildwhere();}
+        $buildwhere = $buildwhere . " AND " . $this->pb_limitassigneduser() ;
+
+        //once condition applies for _limitassigneduser and _searchbuildwhere() uncomment the $buildwhere below
+        $buildwhere = "";
+				  //$buildwhere = $buildwhere . " AND ( " . $this->limit_assigned_user() ." ) ";
+				  
+										//" AND
+							// " . $this->limit_assigned_user() . "   
+
+				   /*           
+					$sql = "SELECT * FROM ".$qmp_viewandrateuser."  " . $buildwhere .  "
+							  and calldate is not null
+							  AND length(calldate::text) > 4
+							  " .$this->config->item('qmp_viewandrateuserWHERE') . "
+							  order by call_originate_time DESC              
+							 LIMIT 20 OFFSET
+							 ".$limit;
+				   */           
+        $sql = "SELECT * FROM    " . $pb_user . " ". $buildwhere .  " 
+                      order by date_created DESC
+                      LIMIT ".$limit.",".$per_page;
+
+                 //" . $buildwhere . " LIMIT 20 OFFSET ".$limit;
+                 //" . $buildwhere . " LIMIT " .$limit . ",20";
+                //limit 10 offset 5 
+        //echo $sql;
+        //echo $this->session->userdata('isLoggedIn');
+        $q = $this->db->query($sql);
+        if($q->num_rows() > 0)
+        {
+            foreach($q->result() as $row)
+            {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    //-------------------------------------------------------------------------------------------
+    //for additional searches, time, employee, parameters etc. just modify this function
+    function pb_searchbuildwhere()
+    {
+    $morewhere = "";
+        //else
+        //{
+            $morewhere ="";
+            return $morewhere;
+        //}
+    }
+    //-------------------------------------------------------------------------------------------
+    //for additional rules in the future like which user can view what, depending on their user roles in employee.admin, just modify this function
+    function pb_limitassigneduser()
+    {
+    $limitwhere = "";
+        //else
+        //{
+            $limitwhere ="";
+            return $limitwhere;
+        //}
     }
     //-------------------------------------------------------------------------------------------
     /*
@@ -164,7 +252,7 @@ class Systemusers_model extends CI_Model {
         $this->db->insert('pb_users', $data);		
         */
         $this->email = $data['email'];
-        $this->ipsignup = $data['ipsignup'];
+        $this->ipsignup =  $this->input->ip_address(); //$data['ipsignup'];
         $this->password = $data['password'];
         $this->username = $data['username'];
         $this->userphoto= $data['userphoto'];
@@ -179,7 +267,7 @@ class Systemusers_model extends CI_Model {
     function update_entry($data)
     {
         $this->email = $data['email'];
-        $this->ipsignup = $data['ipsignup'];
+        $this->ipsignup =   $this->input->ip_address(); //$data['ipsignup'];
         $this->password = $data['password'];
         $this->username = $data['username'];
         $this->userphoto= $data['userphoto'];

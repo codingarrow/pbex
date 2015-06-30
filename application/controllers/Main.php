@@ -20,6 +20,7 @@ class Main extends CI_Controller {
 		//not working try to include on databases_helper.php
 		//$this->load->library('Pest');
         $this->load->model('exclusive/users_model');
+        $this->load->model('admin/systemusers_model');
     }
 	//-------------------------------------------------------------------------------------------------------------------------------
 	/**
@@ -32,7 +33,186 @@ class Main extends CI_Controller {
 		//$this->load->view('admin/welcome_message');
         redirect('/admin/login');
 	}
+	//-------------------------------------------------------------------------------------------------------------------------------paging
+	function initialize_paging(){
+		
+	}
+	//-------------------------------------------------------------------------------------------------------------------------------pb_systemusers
+    function load_systemusers(){  //WITHpaging
+        //ORIGINAL CODE
+        //$searchterm = $this->input->get_post('searchterm', TRUE);          
+        $limit = ($this->uri->segment(3) > 0)?$this->uri->segment(3):0;
+
+        //!!echo current_url();
+
+        $config['base_url'] = site_url(). '/main/load_systemusers'; //WITHpaging
+        //$config['base_url'] = current_url();
+
+        //$config['total_rows'] = $this->search_model->search_record_count($searchterm);
+        $config['total_rows'] = $this->systemusers_model->users_count( );
+
+        //echo $this->timesheet_model->employeeattendancedates_count( );
+        
+        $config['per_page'] = 15; //equal to what is set to employeeattendancedates_search LIMIT,OFFSET
+        $per_page = $config['per_page'];
+        $config['uri_segment'] = 3;
+        $choice = $config['total_rows']/$config['per_page'];
+        
+        //$config['num_links'] = round($choice);
+        $config['num_links'] = round($choice); //15; //round($choice);        
+
+        //remember that these are defined in config
+        $config['full_tag_open'] = $this->config->item('full_tag_open');
+        $config['full_tag_close'] = $this->config->item('full_tag_close');
+        $config['prev_link'] = $this->config->item('prev_link');
+        $config['prev_tag_open'] = $this->config->item('prev_tag_open');
+        $config['prev_tag_close'] = $this->config->item('prev_tag_close');
+        $config['next_link'] = $this->config->item('next_link');
+        $config['next_tag_open'] = $this->config->item('next_tag_open');
+        $config['next_tag_close'] = $this->config->item('next_tag_close');
+        $config['cur_tag_open'] = $this->config->item('cur_tag_open');
+        $config['cur_tag_close'] = $this->config->item('cur_tag_close');
+        $config['num_tag_open'] = $this->config->item('num_tag_open');
+        $config['num_tag_close'] = $this->config->item('num_tag_close');
+        
+        $config['first_tag_open'] = $this->config->item('first_tag_open');
+        $config['first_tag_close'] = $this->config->item('first_tag_close');
+        $config['last_tag_open'] = $this->config->item('last_tag_open');
+        $config['last_tag_close'] = $this->config->item('last_tag_close');
+     
+        $config['first_link'] = $this->config->item('first_link');
+        $config['last_link'] = $this->config->item('last_link');   
+
+        $this->pagination->initialize($config);
+        //$data['results'] = $this->search_model->search($searchterm,$limit);
+        $data['max_posts'] = $this->systemusers_model->users_search($limit,$per_page);
+        $data['links'] = $this->pagination->create_links();
+
+        //ORIGINAL CODE
+        //$data['searchterm'] = $searchterm;
+        /* GUIDE...
+        $this->load->view('templates/header');
+         $this->load->view('show_call_list',$data);
+        $this->load->view('templates/footer');      
+        */
+             $this->load->view('templates/header');
+              $this->load->view('admin/systemusers',$data);
+             $this->load->view('templates/footer');
+    }
 	//-------------------------------------------------------------------------------------------------------------------------------
+    function new_systemusers(){
+      //~~$this->pb_redirect();
+      $data = "";
+      //~~$data['print_department'] = $this->employee_model->get_dropdepartment();
+
+             $this->load->view('templates/header');
+              $this->load->view('admin/new_systemusers',$data);
+             $this->load->view('templates/footer');
+             //$this->render('admin', $data);
+    }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    public function insert_systemusers(){
+      //~~$this->pb_redirect();
+            //$this->newcampaign();
+            //echo 'ok';
+        //prevent direct access when info aren't field
+        //echo 'proceed';exit;
+        $username = $this->input->post('username',1);
+        if (strlen($username)<1)
+            redirect("/main/load_systemusers");
+        //exit;
+            $data['username'] = $this->input->post('username');
+            $data['gender'] = $this->input->post('gender');
+            $data['password'] = $this->input->post('password');
+            $data['email'] = $this->input->post('email');
+            $data['userphoto'] = $this->input->post('userphoto');
+            $data['userrole'] = $this->input->post('userrole');
+
+            $this->systemusers_model->insert_entry($data);
+            redirect("/main/load_systemusers");
+    }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    function edit_systemusers(){
+        //~~$this->tks_redirect();
+        $id = $this->uri->segment(3);
+       /*
+        $leadid = $this->uri->segment(4);
+        $data['lead'] = $this->Leads_Model->get_leads_info($leadid);
+        $data['content'] = $this->load->view('admin/leads/profile', $data, TRUE);        
+        echo 'test '.$id;
+       /*/
+                    $data['entry'] =  $this->systemusers_model->get_entry($id);
+                    //$_SESSION['agententry'] = $this->agent_model->$entry->id;;
+                    //echo $this->uri->segment(3, 0);
+                    //if(!isset($data['entry'][0]) || $data['entry'][0] == ""){
+                    if(!isset($data['entry'][0]) || $data['entry'][0] == ""){
+                            echo "No id found...redirecting";
+                            //echo $_SESSION['agententry'];
+                redirect("/main/load_systemusers");
+                    }
+                    else
+                    {
+                      //~~$data['print_department'] = $this->employee_model->get_dropdepartment();
+
+                            //!!$data['entry'] =  $this->employee_model->get_entry($this->input->post('id'));
+                            //$_SESSION['agententry'] = $gurl;
+                            //echo $_SESSION['agententry'];
+                            $data['entry'] = $data['entry'][0];
+
+                            //$_SESSION['agententry'] = $gurl;
+                            //echo $_SESSION['agententry'];
+                            $this->load->view('templates/header');
+                            $this->load->view('admin/edit_systemusers', $data);
+                            $this->load->view('templates/footer');
+                    }
+
+    }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    function purge_systemusers(){
+      //~~$this->tks_redirect();
+      if($this->uri->segment(3, 0) != ""){
+        $this->systemusers_model->delete_entry($this->uri->segment(3, 0));  
+      }
+       //~~~$showmessage = "You have deleted an employee.<br />";
+       //$this->session->set_flashdata('tks_showmessage', $this->tks_message("Info!",$showmessage));
+       //~~~$this->tks_message("Info!",$showmessage);      
+       //$this->session->keep_flashdata('tks_showmessage');
+      redirect("/main/load_systemusers");
+      }
+	//-------------------------------------------------------------------------------------------------------------------------------
+    public function update_systemusers(){
+            //$this->newcampaign();
+            //echo 'ok';
+           /*
+            $data['name'] = $this->input->post('name');
+            $data['datetime_init'] = $this->input->post('datetime_init');
+            $data['datetime_end'] = $this->input->post('datetime_end');
+            $data['daytime_init'] = $this->input->post('hora_ini_HH') . $this->input->post('hora_ini_MM');
+            $data['daytime_end'] = $this->input->post('hora_fin_HH') . $this->input->post('hora_fin_MM');
+           */
+        //prevent direct access when info aren't field
+        //~~$this->tks_redirect();
+        //echo 'proceed';exit;
+        $id = $this->input->post('id',1);
+        $username = $this->input->post('username',1);
+        if (strlen($username)<1)
+            redirect("/main/load_systemusers/{$id}");
+        //exit;
+            $data['userphoto'] = $this->input->post('userphoto');
+            $data['userrole'] = $this->input->post('userrole');
+            $data['password'] = $this->input->post('password');
+            $data['email'] = $this->input->post('email');
+            $data['username'] = $this->input->post('username');
+            $data['ipsignup'] = $this->input->post('ipsignup');
+            /*			
+            $data['lastname'] = $this->input->post('lastname');
+            $data['firstname'] = $this->input->post('firstname');
+            $data['gender'] = $this->input->post('gender');
+            */
+            $this->systemusers_model->update_entry($data);
+            redirect("/main/load_systemusers");
+    }    
+	//-------------------------------------------------------------------------------------------------------------------------------pb_users
     function load_registeredmembers(){  //WITHpaging
         //ORIGINAL CODE
         //$searchterm = $this->input->get_post('searchterm', TRUE);          

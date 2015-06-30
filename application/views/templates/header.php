@@ -93,8 +93,8 @@
     <script src="<?php echo $base_url;?>vendors/jquery-1.9.1.js"></script>
 
      <?php
-	    //load_employeeattendance
-        $needle = "load_registeredmembers"; $needle1 = "show_computedemployeeattendance";
+	    //load_employeeattendance             show_computedemployeeattendance
+        $needle = "load_registeredmembers"; $needle1 = "load_systemusers";
         $haystack = current_url();
         if (strpos($haystack, $needle) !== false || (strpos($haystack, $needle1) !== false) )
         {

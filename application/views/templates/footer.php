@@ -52,9 +52,9 @@
 		    /*  From this application/views/templates/footer.php file, SET of javascript (jQueries) are required to be preloaded per file for performance benefits.  For example
 				Only load the calendar(datepicker) related js if there's a date on the form, HENCE only load the javasript (jQueries) for those entry forms that really require them
 				2015 Jun 25 by ®yan™
-				new_employee     edit_employee
+				new_employee     edit_employee	new_department	edit_department
 			*/
-            $needle = "load_employeemasterlist"; $needle1 = "edit_users"; $needle3 = "new_users";$needle4 = "change_pwd"; $needle5 = "new_department"; $needle6 = "edit_department";
+            $needle = "load_employeemasterlist"; $needle1 = "edit_users"; $needle3 = "new_users";$needle4 = "change_pwd"; $needle5 = "new_systemusers"; $needle6 = "edit_systemusers";
             if ( (strpos($haystack, $needle) !== false) || (strpos($haystack, $needle1) !== false) || (strpos($haystack, $needle3) !== false) || (strpos($haystack, $needle4) !== false) || (strpos($haystack, $needle5) !== false) || (strpos($haystack, $needle6) !== false) )
             {
          ?>
@@ -82,10 +82,10 @@
 
          <?php
 		    //new_employee     edit_employee
-            $needle = "new_users"; $needle1 = "edit_users";  $needle3 = "change_pwd";
+            $needle = "new_users"; $needle1 = "edit_users";  $needle3 = "change_pwd";  $needle4 = "new_systemusers";  $needle5 = "edit_systemusers";
             $haystack = current_url();
             //echo $haystack;
-            if ( (strpos($haystack, $needle) !== false) || (strpos($haystack, $needle1) !== false) || (strpos($haystack, $needle3) !== false) )
+            if ( (strpos($haystack, $needle) !== false) || (strpos($haystack, $needle1) !== false) || (strpos($haystack, $needle3) !== false)  || (strpos($haystack, $needle4) !== false)   || (strpos($haystack, $needle5) !== false) )
             {
               $UPD = '';
               if ( strpos($haystack, $needle1) !== false ) $UPD = 'UPD';
